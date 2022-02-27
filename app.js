@@ -30,7 +30,6 @@ app.get('/restaurants/:restaurant_id', (req,res) => {
 app.get('/search', (req,res) => {
   if (!req.query.keywords) {
     res.redirect("/")
-    console.log('失敗 : req.query',req.query)
   }
 
   const keywords = req.query.keywords
@@ -48,8 +47,6 @@ app.get('/search', (req,res) => {
   
   // console.log('filterRestaurants', filterRestaurants)
   res.render('index', {restaurant : filterRestaurants})
-
-
 })
 
 // 監聽器
