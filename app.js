@@ -32,20 +32,18 @@ app.get('/search', (req,res) => {
     res.redirect("/")
   }
 
-  const keywords = req.query.keywords
-  const keyword = req.query.keywords.trim().toLowerCase()
+  const keywords = req.query.keywords  // 輸入的搜尋字眼
+  
+  const keyword = req.query.keywords.trim().toLowerCase() // 處理過的輸入的搜尋字眼
 
-  console.log('restaurantsList.results :', restaurantsList.results) //check
+  // restaurantsList.results 是restaurant.json的陣列
+  let filterRestaurants = restaurantsList.results.filter((data) => {
 
-  const filterRestaurants = restaurantsList.results.filter(data => {
-    data.name.toLowerCase().trim().includes(keyword) || data.category.trim().includes(keyword)
-    // console.log('data.name.toLowerCase().trim().includes(keyword) :', data.name.toLowerCase().trim().includes(keyword))
-    // console.log('keyword',keyword)
-    // console.log('成功 : data.name.toLowerCase()',data.name.toLowerCase())
-    // console.log('成功 : data.category',data.category)
+    return data.name.toLowerCase().trim().includes(keyword) || data.category.trim().includes(keyword)
+
   })
   
-  // console.log('filterRestaurants', filterRestaurants)
+  console.log('filterRestaurants', filterRestaurants)
   res.render('index', {restaurant : filterRestaurants})
 })
 
