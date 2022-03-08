@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const RestaurantModel = require('./models/restaurant-list')
 
 const port = 3000
 
@@ -27,10 +28,14 @@ app.set('view engine', 'handlebars')
 // 告知靜態檔案位置
 app.use(express.static('public'))
 
-// route
-app.get('/', (req,res) => {
-  
-  res.render('index', {restaurant : restaurantsList.results})
+// route 根目錄
+app.get('/', (req, res) => {
+  RestaurantModel.find()
+    .lean()
+    .then(restaurant => {
+      res.render('index', {restaurant : restaurantsList.results})
+    })
+    .catch(error => console.error('error'))
 })
 
 // route for 點擊餐廳跳轉到show page
