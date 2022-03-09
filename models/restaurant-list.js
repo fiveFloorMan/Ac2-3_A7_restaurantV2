@@ -14,6 +14,3 @@ const restaurantSchema = new Schema({
 })
 
 module.exports = mongoose.model('RestaurantModel', restaurantSchema)
-// 輸出端確定OK
-
-// 在所有地方直接使用RestaurantModel, 就可以用到RestaurantModel

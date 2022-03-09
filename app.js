@@ -30,6 +30,7 @@ app.use(express.static('public'))
 
 // route 根目錄
 app.get('/', (req, res) => {
+  // Controller
   RestaurantModel.find()
     .lean()
     .then(restaurant => {
@@ -59,6 +60,10 @@ app.get('/search', (req,res) => {
   res.render('index', {restaurant : filterRestaurants})
 })
 
+// route for create new restaurant
+app.get('/restaurants/new', (req, res) => {
+  res.render('new')
+})
 // route for Edit
 
 // route for show the Detail
