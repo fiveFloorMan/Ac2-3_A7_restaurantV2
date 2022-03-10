@@ -20,6 +20,7 @@ db.once('open', () => {
 
 // require 渲染的工具
 const exphbs = require('express-handlebars')
+// 可能是無用的變數
 const restaurantsList = require('./restaurant.json')
 
 // set engine
@@ -32,13 +33,13 @@ app.use(express.static('public'))
 // bodyParser
 app.use(bodyParser.urlencoded({ extended : true }))
 
-// route 根目錄
+// route 根目錄 & 顯示所有餐廳
 app.get('/', (req, res) => {
   // Controller
   RestaurantModel.find()
     .lean()
     .then(restaurant => {
-      res.render('index', {restaurant : restaurantsList.results})
+      res.render('index', { restaurant : restaurant })
     })
     .catch(error => console.error('error'))
 })
@@ -63,14 +64,19 @@ app.post('/restaurants' , (req, res) => {
     .catch(error => console.log(error))
 
 })
-// route for 點擊餐廳跳轉到show page
-app.get('/restaurants/:restaurant_id', (req,res) => {
-
-  let show_id = req.params.restaurant_id - 1
-  res.render('show', {restaurant : restaurantsList.results[show_id]})
+// route for show page (specific restaurant)
+app.get('/restaurants/:restaurant_id', (req, res) => {
+  const id = req.params.restaurant_id
+  return RestaurantModel.findById(id)
+    .lean()
+    .then((restaurant) => {
+      console.log('restaurant', restaurant)
+      res.render('show', {restaurant : restaurant})
+    })
+    .catch(error => console.log(error))
 })
 
-// route for search
+// route for search restaurant 
 app.get('/search', (req,res) => {
   if (!req.query.keywords) {
     res.redirect("/")
