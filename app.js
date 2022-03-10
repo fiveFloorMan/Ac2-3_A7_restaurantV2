@@ -44,9 +44,33 @@ app.get('/', (req, res) => {
     .catch(error => console.error('error'))
 })
 
+// route for search restaurant 
+app.get('/search', (req,res) => {
+  if (!req.query.keywords) {
+    res.redirect("/")
+  }
+  const keywords = req.query.keywords  // 輸入的搜尋字眼
+  const keyword = req.query.keywords.trim().toLowerCase() // 處理過的輸入的搜尋字眼
+  // restaurantsList.results 是restaurant.json的陣列
+  let filterRestaurants = restaurantsList.results.filter((data) => {
+    return data.name.toLowerCase().trim().includes(keyword) || data.category.trim().includes(keyword)
+  })
+  res.render('index', {restaurant : filterRestaurants})
+})
+
 // route for create new restaurant
 app.get('/restaurants/new', (req, res) => {
   res.render('new')
+})
+// route for show page (specific restaurant)
+app.get('/restaurants/:restaurant_id', (req, res) => {
+  const id = req.params.restaurant_id
+  return RestaurantModel.findById(id)
+    .lean()
+    .then((restaurant) => {
+      res.render('show', {restaurant : restaurant})
+    })
+    .catch(error => console.log(error))
 })
 // route for catch new restaurant data
 app.post('/restaurants' , (req, res) => {
@@ -64,36 +88,40 @@ app.post('/restaurants' , (req, res) => {
     .catch(error => console.log(error))
 
 })
-// route for show page (specific restaurant)
-app.get('/restaurants/:restaurant_id', (req, res) => {
-  const id = req.params.restaurant_id
+// route for Edit
+app.get('/restaurants/:_id/edit', (req, res) => {
+  const id = req.params._id
   return RestaurantModel.findById(id)
     .lean()
     .then((restaurant) => {
-      console.log('restaurant', restaurant)
-      res.render('show', {restaurant : restaurant})
+      res.render('edit', { restaurant : restaurant })
     })
     .catch(error => console.log(error))
 })
+// route for Catch Edit restaurant data
+app.post('/restaurants/:_id', (req, res) =>{
+  const id = req.params._id
 
-// route for search restaurant 
-app.get('/search', (req,res) => {
-  if (!req.query.keywords) {
-    res.redirect("/")
-  }
-  const keywords = req.query.keywords  // 輸入的搜尋字眼
-  const keyword = req.query.keywords.trim().toLowerCase() // 處理過的輸入的搜尋字眼
-  // restaurantsList.results 是restaurant.json的陣列
-  let filterRestaurants = restaurantsList.results.filter((data) => {
-    return data.name.toLowerCase().trim().includes(keyword) || data.category.trim().includes(keyword)
-  })
-  res.render('index', {restaurant : filterRestaurants})
+  return RestaurantModel.findById(id)
+    .then( restaurantEdit => {
+      return restaurantEdit.update(req.body)
+    })
+    .then(() => res.redirect('/')) //還有有疑問的地方
+    .catch(error => console.log(error))
 })
 
+// route for delete
+app.post('/restaurants/:_id/delete', (req, res) => {
+  const id = req.params._id
+  return RestaurantModel.findById(id)
+    .then(restaurant => restaurant.remove())
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
 
-// route for Edit
+//form action="/restaurants/{{ this._id }}/delete" method="POST" 
 
-// route for show the Detail
+
 
 // route for Delete 
 // 監聽器

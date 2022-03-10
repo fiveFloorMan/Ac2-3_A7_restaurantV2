@@ -1,4 +1,3 @@
-<a href="/restaurants/new">Create new restaurant</a>
 <!-- search bar -->
 <div class="container search-bar">
   <div class="search-bar-outer">
@@ -12,9 +11,15 @@
           </div>
         </div>
       </form>
+      <div class="text-right">
+        <a href="/restaurants/new"><button
+            class="btn btn-primary"
+          >新增餐廳</button></a>
+      </div>
     </div>
   </div>
 </div>
+
 <!-- restaurant list -->
 <div class="container mt-5">
   <div class="row">
@@ -37,6 +42,10 @@
               </div>
             </div>
           </a>
+          <a class="btn btn-link btn-sm" href="./restaurants/{{this._id}}/edit">Edit</a>
+          <form action="/restaurants/{{ this._id }}/delete" method="POST" style="display:inline;">
+            <button class="btn btn-danger btn-sm text-white" type="submit">delete</button>
+          </form>
           <form action=""></form>
         {{/each}}
       </div>
