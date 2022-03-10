@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const RestaurantModel = require('./models/restaurant-list')
+const bodyParser = require('body-parser')
 
 const port = 3000
 
@@ -28,6 +29,9 @@ app.set('view engine', 'handlebars')
 // 告知靜態檔案位置
 app.use(express.static('public'))
 
+// bodyParser
+app.use(bodyParser.urlencoded({ extended : true }))
+
 // route 根目錄
 app.get('/', (req, res) => {
   // Controller
@@ -39,6 +43,26 @@ app.get('/', (req, res) => {
     .catch(error => console.error('error'))
 })
 
+// route for create new restaurant
+app.get('/restaurants/new', (req, res) => {
+  res.render('new')
+})
+// route for catch new restaurant data
+app.post('/restaurants' , (req, res) => {
+  const name = req.body.name
+  const name_en = req.body.name_en
+  const category = req.body.category
+  const image = req.body.image
+  const location = req.body.location
+  const phone = req.body.phone
+  const google_map = req.body.google_map
+  const rating = req.body.rating
+  const description = req.body.description
+  return RestaurantModel.create({ name, name_en, category, image, location, phone, google_map, rating, description })
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+
+})
 // route for 點擊餐廳跳轉到show page
 app.get('/restaurants/:restaurant_id', (req,res) => {
 
@@ -60,10 +84,7 @@ app.get('/search', (req,res) => {
   res.render('index', {restaurant : filterRestaurants})
 })
 
-// route for create new restaurant
-app.get('/restaurants/new', (req, res) => {
-  res.render('new')
-})
+
 // route for Edit
 
 // route for show the Detail
@@ -73,9 +94,3 @@ app.get('/restaurants/new', (req, res) => {
 app.listen(port , () => {
   console.log(`DNS : http://localhost:${port}`)
 })
-
-// 讀取 JSON 檔案，將種子資料載入應用程式 ok
-// 把資料帶入 handlebars 樣板中動態呈現 ok
-// 操作 handlebars 中的 each 迴圈呈現出多張餐廳卡片 ok
-// 應用 params 打造動態路由 ok
-// 用 Query String 打造搜尋功能 ok
