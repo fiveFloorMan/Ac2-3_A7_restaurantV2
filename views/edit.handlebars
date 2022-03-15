@@ -20,7 +20,7 @@
         id="name_en"
         placeholder="Alpha Tech Theme Restaurant"
         name="name_en"
-        value="{{restaurant.name_en}}"
+        value="{{restaurant.nameEn}}"
         required
       />
     </div>
@@ -83,7 +83,7 @@
         class="form-control"
         id="google_map"
         name="google_map"
-        value="{{restaurant.google_map}}"
+        value="{{restaurant.googleMap}}"
       required/>
     </div>
     <div class="mb-3">
@@ -106,8 +106,10 @@
         id="description"
         rows="3"
         name="description"
-    required</div>
-      >{{restaurant.description}}</textarea>
+        required>
+{{restaurant.description}}
+    </textarea>
+    </div>
     <div class="text-center">
       <button type="submit" class="btn btn-primary">
         儲存修改

@@ -103,7 +103,7 @@ app.post('/restaurants/:_id', (req, res) => {
     .then(restaurantEdit => {
       return restaurantEdit.update(req.body)
     })
-    .then(() => res.redirect('/')) // 還有有疑問的地方
+    .then(() => res.redirect(`/restaurants/${id}`))// 還有有疑問的地方
     .catch(error => console.log(error))
 })
 
